@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/picpay
+    username: postgres
+    password: 99938549
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # Use "create", "create-drop", "update" ou "validate" conforme necess�rio
+    show-sql: true       # Exibe as queries SQL no console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # Dialeto espec�fico do PostgreSQL
