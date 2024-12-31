@@ -5,9 +5,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "tb_user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +35,17 @@ public class User {
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private MoneyWallet moneyWallet;
 
+    private EROLE role;
+    public User(String username, String password, String cpf_cnpj, String email, MoneyWallet moneyWallet,EROLE role){
+            this.username = username;
+            this.password = password;
+            this.cpf_cnpj = cpf_cnpj;
+            this.email = email;
+            this.moneyWallet = moneyWallet;
+            this.role = role;
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -41,8 +58,22 @@ public class User {
         return username;
     }
 
+    public EROLE getRole() {
+        return role;
+    }
+
+    public void setRole(EROLE role) {
+        this.role = role;
+    }
+
     public void setUsername(@NotEmpty String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == EROLE.USER) return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_SHOPKEEPER"));
     }
 
     public @NotEmpty @Size(min = 5, max = 50) String getPassword() {
