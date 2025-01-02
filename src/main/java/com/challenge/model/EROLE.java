@@ -4,6 +4,7 @@ public enum EROLE {
     USER("user"),
     SHOPKEEPER("shopkeeper");
     private String role;
+
     EROLE(String role){
         this.role = role;
     }
