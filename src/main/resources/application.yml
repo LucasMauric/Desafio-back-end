@@ -11,3 +11,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect # Dialeto espec�fico do PostgreSQL
+  secret:
+    secret-key: ================chaveSecretaRESTAPI================

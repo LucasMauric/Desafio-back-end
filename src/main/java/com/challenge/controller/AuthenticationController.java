@@ -1,8 +1,10 @@
 package com.challenge.controller;
 
 import com.challenge.model.DTO.Login;
+import com.challenge.model.DTO.TokenDTO;
 import com.challenge.model.DTO.UserDTO;
 import com.challenge.model.User;
+import com.challenge.security.JwtUtils;
 import com.challenge.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +24,8 @@ public class AuthenticationController {
     @Autowired
     UserService userService;
     @Autowired
+    JwtUtils jwtUtils;
+    @Autowired
     AuthenticationManager authenticationManager;
     @PostMapping("/register")
     @Operation(summary = "Registrar novo usuário", description = "End point para criar um novo usuário.")
@@ -37,7 +41,7 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody @Valid Login login){
         var authentication = new UsernamePasswordAuthenticationToken(login.username(),login.password());
         var auth = authenticationManager.authenticate(authentication);
-
-        return ResponseEntity.ok().build();
+        var token = jwtUtils.generateToken((User) auth.getPrincipal());
+        return ResponseEntity.ok(new TokenDTO(token));
     }
 }

@@ -1,8 +1,6 @@
 package com.challenge.controller;
 
 
-import com.challenge.model.DTO.UserDTO;
-import com.challenge.model.User;
 import com.challenge.request.Transfer;
 import com.challenge.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
