@@ -41,10 +41,9 @@ public class SecurityConfiguration {
                  .cors(cors -> cors.configurationSource(config.corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(HttpMethod.POST,"/transfer/**" ).hasAnyRole("USER")
+                                .requestMatchers(HttpMethod.POST,"home/transfer/**" ).hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/auth/register/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/findAll/**").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html/**").permitAll()
                                 .anyRequest().authenticated()
                 );
@@ -52,6 +51,7 @@ public class SecurityConfiguration {
         httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
+
     @Bean
     public DaoAuthenticationProvider AuthenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();

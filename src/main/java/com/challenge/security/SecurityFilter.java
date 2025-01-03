@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -48,11 +49,13 @@ public class SecurityFilter extends OncePerRequestFilter {
 //            }
 //        }
 
-        var authHeader = request.getHeader("Authorization");
-        logger.error(authHeader);
-        if (authHeader == null) return null;
-        return authHeader.replace("Bearer ", "");
+        var headerAuth = request.getHeader("Authorization");
+        logger.error(headerAuth + "teste");
 
+        if(StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){
+            return headerAuth.substring(7);
+        }
+        return null;
     }
 
 }

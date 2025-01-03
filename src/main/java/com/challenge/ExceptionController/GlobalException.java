@@ -1,6 +1,7 @@
 package com.challenge.ExceptionController;
 
 import com.challenge.exceptions.InsufficientBalanceException;
+import com.challenge.exceptions.UserNotAuthorized;
 import com.challenge.exceptions.UserNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,10 @@ public class GlobalException {
     public ResponseEntity<?>insufficientBalanceException(InsufficientBalanceException insufficientBalanceException){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(insufficientBalanceException.getMessage());
     }
-
+    @ExceptionHandler(UserNotAuthorized.class)
+    public ResponseEntity<?> userNotAuthorized(UserNotAuthorized userNotAuthorized){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userNotAuthorized.getMessage());
+    }
 
 
 

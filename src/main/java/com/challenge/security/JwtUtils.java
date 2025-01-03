@@ -22,15 +22,15 @@ public class JwtUtils {
 
     @Value("${spring.secret.secret-key}")
     private String jwtSecret;
-
-
+    @Value("${spring.secret.expiration}")
+    private int expiration;
     public String generateJwtToken(Authentication authentication){
 
         User userDetails = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject((userDetails.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime()))
+                .setExpiration(new Date((new Date()).getTime() + expiration))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }

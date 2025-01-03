@@ -1,7 +1,9 @@
 package com.challenge.service.impl;
 
+import com.challenge.exceptions.UserNotAuthorized;
 import com.challenge.exceptions.UserNotFound;
 import com.challenge.model.DTO.UserDTO;
+import com.challenge.model.EROLE;
 import com.challenge.model.MoneyWallet;
 import com.challenge.model.User;
 import com.challenge.repository.MoneyRepository;
@@ -46,17 +48,22 @@ public class UserServiceImpl implements UserService {
         //PAGADOR
         Optional<User> userPayer = userRepository.findById(transfer.getPayer());
         userPayer.orElseThrow(UserNotFound::new);
+        logger.error(userPayer.get().getRole().toString());
+        if(userPayer.get().getRole() != EROLE.SHOPKEEPER){
+            Optional<MoneyWallet> moneyWalletPayer = moneyRepository.findById(userPayer.get().getMoneyWallet().getId());
+            logger.error("{}",moneyWalletPayer.get().getSaldo());
 
-        Optional<MoneyWallet> moneyWalletPayer = moneyRepository.findById(userPayer.get().getMoneyWallet().getId());
-        logger.error("{}",moneyWalletPayer.get().getSaldo());
+            if(moneyWalletPayer.get().getSaldo().compareTo(transfer.getValue()) == 1){
+                BigDecimal saldoAtual = moneyWalletPayer.get().getSaldo().subtract(transfer.getValue());
+                moneyWalletPayer.get().setSaldo(saldoAtual);
+                moneyRepository.save(moneyWalletPayer.get());
 
-        if(moneyWalletPayer.get().getSaldo().compareTo(transfer.getValue()) == 1){
-            BigDecimal saldoAtual = moneyWalletPayer.get().getSaldo().subtract(transfer.getValue());
-            moneyWalletPayer.get().setSaldo(saldoAtual);
-            moneyRepository.save(moneyWalletPayer.get());
+            }else{
+                throw new UserNotFound("Saldo insuficiente");
+            }
 
         }else{
-            throw new UserNotFound("Saldo insuficiente");
+            throw new UserNotAuthorized();
         }
 
         //BENEFICIARIO
