@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/picpay
-    username: postgres
-    password: 99938549
+    url: jdbc:postgresql://[host]:[porta]/[nome do banco]
+    username: [username]
+    password: [password]
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect # Dialeto espec�fico do PostgreSQL
+  secret:
+    secret-key: ================chaveSecretaRESTAPI================
+    expiration: 80000000
